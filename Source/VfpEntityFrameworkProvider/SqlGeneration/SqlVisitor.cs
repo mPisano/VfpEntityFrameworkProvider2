@@ -3179,26 +3179,54 @@ namespace VfpEntityFrameworkProvider.SqlGeneration {
         private SqlBuilder VisitIsNullExpression(VfpIsNullExpression e, bool negate) {
             SqlBuilder result = new SqlBuilder();
 
-            if (this.isProcessingFilter) {
-                result.Append("(");
+            //if (this.isProcessingFilter) {
+            //    result.Append("(");
+            //    result.Append(e.Argument.Accept(this));
+            //    result.Append(")");
+            //    if (!negate) {
+            //        result.Append(" IS NULL");
+            //    }
+            //    else {
+            //        result.Append(" IS NOT NULL");
+            //    }
+            //}
+            //else {
+            //    if (negate) {
+            //        result.Append("!");
+            //    }
+
+            //    result.Append("ISNULL(");
+            //    result.Append(e.Argument.Accept(this));
+            //    result.Append(")");
+            //}
+
+            if (negate)
+            {
+                result.Append("!");
+            }
+
+            result.Append("ISNULL(");
                 result.Append(e.Argument.Accept(this));
                 result.Append(")");
-                if (!negate) {
-                    result.Append(" IS NULL");
+
+
+            if (negate)
+            {
+                result.Append(" AND ");
                 }
-                else {
-                    result.Append(" IS NOT NULL");
-                }
+            else
+            {
+                result.Append(" OR ");
             }
-            else {
-                if (negate) {
+
+            if (negate)
+            {
                     result.Append("!");
                 }
 
-                result.Append("ISNULL(");
+            result.Append("ISBLANK(");
                 result.Append(e.Argument.Accept(this));
                 result.Append(")");
-            }
 
             return result;
         }
